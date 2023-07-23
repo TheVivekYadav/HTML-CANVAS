@@ -32,7 +32,7 @@ button:hover,
 .custom-file-upload:hover{
     color: #000;
     background-color: #fff;
-    cursor: grab;
+    cursor: pointer;
 }
 input[type="file"] {
     display: none;

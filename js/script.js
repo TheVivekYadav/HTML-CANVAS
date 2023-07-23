@@ -16,8 +16,8 @@ window.addEventListener('load', function () {
             this.size = this.effect.gap;
             this.vx = 0;
             this.vy = 0;
-            this.ease = 0.8;
-            this.friction = 0.4;
+            this.ease = 0.2;
+            this.friction = 0.94;
             this.dx = 0;
             this.dy = 0;
             this.distance = 0;
@@ -37,8 +37,8 @@ window.addEventListener('load', function () {
 
             if (this.distance < this.effect.mouse.radius) {
                 this.angle = Math.atan2(this.dy, this.dx);
-                this.vx += this.force * Math.cos(this.angle);
-                this.vy += this.force * Math.sin(this.angle);
+                this.vx += this.force * (Math.cos(this.angle));
+                this.vy += this.force * (Math.sin(this.angle));
             }
 
             this.x += (this.vx *= this.friction) + (this.originX - this.x) * this.ease;
@@ -49,6 +49,7 @@ window.addEventListener('load', function () {
             this.y = Math.random() * this.effect.height;
             this.ease = 0.7;
         }
+
 
     }
 
@@ -64,7 +65,7 @@ window.addEventListener('load', function () {
             this.y = this.centerY - this.image.height * 0.5;
             this.gap = 5;
             this.mouse = {
-                radius: 3000,
+                radius: 1000,
                 x: undefined,
                 y: undefined
             }
@@ -106,6 +107,13 @@ window.addEventListener('load', function () {
         wrap() {
             this.particlesArray.forEach(particle => particle.wrap());
         }
+        redrawCanvas(){
+            console.log('refreshed');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            effect = new Effect(canvas.width, canvas.height);
+            effect.init(ctx);
+        }
     }
 
     let effect = new Effect(canvas.width, canvas.height);
@@ -116,9 +124,6 @@ window.addEventListener('load', function () {
         effect.draw(ctx);
         effect.update();
         requestAnimationFrame(animate);
-
-       
-
     }
     animate();
 
@@ -126,6 +131,12 @@ window.addEventListener('load', function () {
     const wrapButton = document.getElementById('wrapbutton');
     wrapButton.addEventListener('click', function () {
         effect.wrap();
+    });
+
+    // refresh canvas
+    const refreshCanvas = document.getElementById('refreshCanvas');
+    refreshCanvas.addEventListener('click',function(){
+        effect.redrawCanvas();
     });
 
     // Function to re-render everything when the window is resized
@@ -144,19 +155,7 @@ window.addEventListener('load', function () {
     });
 
     // Call redraw_canvas initially to set up the canvas and particles
-    redraw_canvas();
-
-    const imgElement = document.getElementById("image1");
-    const observer = new MutationObserver(function(mutationsList) {
-        for (const mutation of mutationsList) {
-            if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
-                console.log('inside imgae changer')
-                redraw_canvas();
-            }
-        }
-    });
-
-    observer.observe(imgElement, { attributes: true });
+    // redraw_canvas();
 
 });
 

@@ -1,6 +1,6 @@
 window.addEventListener('load', function () {
     const canvas = document.getElementById('canvas1');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
@@ -16,7 +16,7 @@ window.addEventListener('load', function () {
             this.size = this.effect.gap;
             this.vx = 0;
             this.vy = 0;
-            this.ease = 0.3;
+            this.ease = 0.8;
             this.friction = 0.4;
             this.dx = 0;
             this.dy = 0;
@@ -62,21 +62,21 @@ window.addEventListener('load', function () {
             this.centerY = this.height * 0.5;
             this.x = this.centerX - this.image.width * 0.5;
             this.y = this.centerY - this.image.height * 0.5;
-            this.gap = 2;
+            this.gap = 5;
             this.mouse = {
-                radius: 1000,
+                radius: 3000,
                 x: undefined,
                 y: undefined
             }
-            window.addEventListener('mousemove',event =>{
+            window.addEventListener('mousemove', event => {
                 this.mouse.x = event.x;
                 this.mouse.y = event.y;
             });
-            window.addEventListener('touchmove',e =>{
+            window.addEventListener('touchmove', e => {
                 this.mouse.x = e.touches[0].clientX;
                 this.mouse.y = e.touches[0].clientY;
             });
-            
+
         }
         init(context) {
             context.drawImage(this.image, this.x, this.y);
@@ -108,7 +108,7 @@ window.addEventListener('load', function () {
         }
     }
 
-    const effect = new Effect(canvas.width, canvas.height);
+    let effect = new Effect(canvas.width, canvas.height);
     effect.init(ctx);
 
     function animate() {
@@ -125,4 +125,48 @@ window.addEventListener('load', function () {
         effect.wrap();
     });
 
+    // Function to re-render everything when the window is resized
+    function redraw_canvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        effect = new Effect(canvas.width, canvas.height);
+        effect.init(ctx);
+    }
+
+
+    // Event listener for window resize
+    window.addEventListener('resize', function () {
+        redraw_canvas();
+    });
+
+    // Call redraw_canvas initially to set up the canvas and particles
+    redraw_canvas();
+
+    const imgElement = document.getElementById("image1");
+    const observer = new MutationObserver(function(mutationsList) {
+        for (const mutation of mutationsList) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
+                redraw_canvas();
+            }
+        }
+    });
+
+    observer.observe(imgElement, { attributes: true });
+
 });
+
+// image loading ...
+function handleImageSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        const dataUrl = e.target.result;
+        // const imgTag = `<img src="${dataUrl}" alt="Selected Image">`;
+        let img = document.getElementById("image1");
+        img.src = dataUrl;
+    };
+    reader.readAsDataURL(file);
+}

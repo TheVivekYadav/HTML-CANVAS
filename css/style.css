@@ -16,17 +16,24 @@ body{
 img{
     display: none;
 }
-button{
+button,
+.custom-file-upload{
     padding: 20px;
     font-size: 30px;
     margin: 20px;
     font-family: 'Bangers', cursive;
     color:#fff;
     background-color: #000;
-    transition: ease 0.5s;
+    transition: ease-in-out 200ms;
+    border:none;
 }
 
-button:hover{
+button:hover,
+.custom-file-upload:hover{
     color: #000;
     background-color: #fff;
+    cursor: grab;
+}
+input[type="file"] {
+    display: none;
 }

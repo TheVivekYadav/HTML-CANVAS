@@ -17,7 +17,8 @@
         alt="" id="image1">
     <div class="controls">
         <button id="wrapbutton">Wrap</button>
-        <button id="uploadImage">Upload Your Own Image</button>
+        <label for="imageInput" class="custom-file-upload">Select Image</label>
+        <input type="file" id="imageInput" accept="image/*" onchange="handleImageSelect(event)">
     </div>
 
     <script src="js/script.js"></script>

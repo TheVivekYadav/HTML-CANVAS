@@ -17,7 +17,7 @@ window.addEventListener('load', function () {
             this.vx = 0;
             this.vy = 0;
             this.ease = 0.3;
-            this.friction = 0.5;
+            this.friction = 0.4;
             this.dx = 0;
             this.dy = 0;
             this.distance = 0;
@@ -29,14 +29,14 @@ window.addEventListener('load', function () {
             context.fillRect(this.x, this.y, this.size, this.size)
         }
 
-        update(){
+        update() {
             this.dx = this.effect.mouse.x - this.x;
             this.dy = this.effect.mouse.y - this.y;
             this.distance = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
             this.force = -this.effect.mouse.radius / this.distance;
 
-            if (this.distance < this.effect.mouse.radius){
-                this.angle = Math.atan2(this.dy,this.dx);
+            if (this.distance < this.effect.mouse.radius) {
+                this.angle = Math.atan2(this.dy, this.dx);
                 this.vx += this.force * Math.cos(this.angle);
                 this.vy += this.force * Math.sin(this.angle);
             }
@@ -44,7 +44,7 @@ window.addEventListener('load', function () {
             this.x += (this.vx *= this.friction) + (this.originX - this.x) * this.ease;
             this.y += (this.vy *= this.friction) + (this.originY - this.y) * this.ease;
         }
-        wrap(){
+        wrap() {
             this.x = Math.random() * this.effect.width;
             this.y = Math.random() * this.effect.height;
             this.ease = 0.7;
@@ -65,27 +65,32 @@ window.addEventListener('load', function () {
             this.gap = 2;
             this.mouse = {
                 radius: 1000,
-                x:undefined,
-                y:undefined
+                x: undefined,
+                y: undefined
             }
             window.addEventListener('mousemove',event =>{
                 this.mouse.x = event.x;
                 this.mouse.y = event.y;
             });
+            window.addEventListener('touchmove',e =>{
+                this.mouse.x = e.touches[0].clientX;
+                this.mouse.y = e.touches[0].clientY;
+            });
+            
         }
         init(context) {
-            context.drawImage(this.image,this.x,this.y);
-            const pixels = context.getImageData(0,0,this.width, this.height).data;
-            for (let y = 0; y < this.height; y += this.gap){
-                for (let x = 0; x < this.width; x += this.gap){
+            context.drawImage(this.image, this.x, this.y);
+            const pixels = context.getImageData(0, 0, this.width, this.height).data;
+            for (let y = 0; y < this.height; y += this.gap) {
+                for (let x = 0; x < this.width; x += this.gap) {
                     const index = (y * this.width + x) * 4;
                     const red = pixels[index];
                     const green = pixels[index + 1];
                     const blue = pixels[index] + 2;
                     const alpha = pixels[index + 3];
-                    const color = 'rgb('+ red + ',' + green + ',' + blue + ')';
+                    const color = 'rgb(' + red + ',' + green + ',' + blue + ')';
 
-                    if (alpha > 0){
+                    if (alpha > 0) {
                         this.particlesArray.push(new Particle(this, x, y, color));
                     }
                 }
@@ -94,11 +99,11 @@ window.addEventListener('load', function () {
         draw(context) {
             this.particlesArray.forEach(particle => particle.draw(context));
         }
-        update(){
+        update() {
             this.particlesArray.forEach(particle => particle.update());
 
         }
-        wrap(){
+        wrap() {
             this.particlesArray.forEach(particle => particle.wrap());
         }
     }
@@ -107,16 +112,16 @@ window.addEventListener('load', function () {
     effect.init(ctx);
 
     function animate() {
-        ctx.clearRect(0,0,canvas.width,canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         effect.draw(ctx);
-        effect.update();    
+        effect.update();
         requestAnimationFrame(animate);
     }
     animate();
 
     // wrap button
     const wrapButton = document.getElementById('wrapbutton');
-    wrapButton.addEventListener('click',function(){
+    wrapButton.addEventListener('click', function () {
         effect.wrap();
     });
 

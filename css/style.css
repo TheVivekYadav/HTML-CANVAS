@@ -2,6 +2,9 @@
     margin: 0;
     padding: 0;
 }
+body{
+    overflow: hidden;
+}
 #canvas1{
     position: absolute;
 }
@@ -20,7 +23,7 @@ button{
     font-family: 'Bangers', cursive;
     color:#fff;
     background-color: #000;
-    transition: ease 0.2s;
+    transition: ease 0.5s;
 }
 
 button:hover{

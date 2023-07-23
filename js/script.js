@@ -1,6 +1,6 @@
 window.addEventListener('load', function () {
     const canvas = document.getElementById('canvas1');
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
@@ -116,6 +116,9 @@ window.addEventListener('load', function () {
         effect.draw(ctx);
         effect.update();
         requestAnimationFrame(animate);
+
+       
+
     }
     animate();
 
@@ -127,6 +130,7 @@ window.addEventListener('load', function () {
 
     // Function to re-render everything when the window is resized
     function redraw_canvas() {
+        console.log('redrawen')
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         effect = new Effect(canvas.width, canvas.height);
@@ -146,6 +150,7 @@ window.addEventListener('load', function () {
     const observer = new MutationObserver(function(mutationsList) {
         for (const mutation of mutationsList) {
             if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
+                console.log('inside imgae changer')
                 redraw_canvas();
             }
         }
